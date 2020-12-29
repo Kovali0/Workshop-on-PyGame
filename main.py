@@ -7,6 +7,7 @@ clock = pygame.time.Clock() # set up the clock
 BG = pygame.image.load('background1.jpg')
 WINDOW_SIZE = (BG.get_width(), BG.get_height())
 PLAYER_START_LOCATION = [100, 275]
+PLATFORMXY = [200, 200]
 
 class Player():
     def __init__(self):
@@ -22,7 +23,8 @@ def initGame():
     pygame.display.set_caption('Pygame Window')
 
 def renderGameWindow():
-    screen.blit(BG, (0, 0))  # This will draw our background image at (0,0)\
+    screen.blit(BG, (0, 0))  # This will draw our background image at (0,0)
+    screen.blit(pygame.image.load('platform.png'), PLATFORMXY)
     if player.sideFocus == "left":
         screen.blit(player.walkL[player.currentPose], player.location)
     else:
@@ -35,6 +37,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
     move_counter = 0
     jump = False
+    on_ground = True
     player = Player()
 
     while True:
@@ -43,11 +46,14 @@ if __name__ == '__main__':
                 pygame.quit()
 
         if jump:
-            player.location[1] -= 4
+            player.location[1] -= 10
             jump = False
         else:
             if player.location[1] < 275:
                 player.location[1] += 2
+
+        if player.location[1] == 275:
+            on_ground = True
 
         if pygame.key.get_pressed()[pygame.K_d]:
             player.location[0] += 4
@@ -56,14 +62,17 @@ if __name__ == '__main__':
             player.currentPose = move_counter%3
 
         if pygame.key.get_pressed()[pygame.K_a]:
-            player.location[0] -= 4
-            move_counter += 1
-            player.sideFocus = "left"
-            player.currentPose = move_counter%3
+            if player.location[0] is not 0:
+                player.location[0] -= 4
+                move_counter += 1
+                player.sideFocus = "left"
+                player.currentPose = move_counter%3
 
         if pygame.key.get_pressed()[pygame.K_SPACE]:
-            player.location[1] -= 4
-            jump = True
+            if on_ground:
+                player.location[1] -= 10
+                jump = True
+                on_ground = False
 
         renderGameWindow()
         clock.tick(60)
