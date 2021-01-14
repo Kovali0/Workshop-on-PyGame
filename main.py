@@ -5,6 +5,8 @@ import pygame
 from pygame.locals import *
 clock = pygame.time.Clock() # set up the clock
 BG = pygame.image.load('background1.jpg')
+BGX = 0
+BGX2 = BG.get_width()
 WINDOW_SIZE = (BG.get_width(), BG.get_height())
 PLAYER_START_LOCATION = [100, 275]
 PLATFORMXY = [200, 200]
@@ -23,8 +25,10 @@ def initGame():
     pygame.display.set_caption('Pygame Window')
 
 def renderGameWindow():
-    screen.blit(BG, (0, 0))  # This will draw our background image at (0,0)
-    screen.blit(pygame.image.load('platform.png'), PLATFORMXY)
+    #screen.blit(BG, (0, 0))  # This will draw our background image at (0,0)
+    screen.blit(BG, (BGX, 0))  # draws our first bg image
+    screen.blit(BG, (BGX2, 0))
+    #screen.blit(pygame.image.load('platform.png'), PLATFORMXY)
     if player.sideFocus == "left":
         screen.blit(player.walkL[player.currentPose], player.location)
     else:
@@ -41,6 +45,15 @@ if __name__ == '__main__':
     player = Player()
 
     while True:
+        BGX -= 1.4  # Move both background images back
+        BGX2 -= 1.4
+
+        if BGX < BG.get_width() * -1:  # If our bg is at the -width then reset its position
+            BGX = BG.get_width()
+
+        if BGX2 < BG.get_width() * -1:
+            BGX2 = BG.get_width()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
