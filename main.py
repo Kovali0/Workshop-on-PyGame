@@ -45,9 +45,6 @@ if __name__ == '__main__':
     player = Player()
 
     while True:
-        BGX -= 1.4  # Move both background images back
-        BGX2 -= 1.4
-
         if BGX < BG.get_width() * -1:  # If our bg is at the -width then reset its position
             BGX = BG.get_width()
 
@@ -73,6 +70,9 @@ if __name__ == '__main__':
             move_counter += 1
             player.sideFocus = "right"
             player.currentPose = move_counter%3
+
+            BGX -= 1.4  # Move both background images back
+            BGX2 -= 1.4
 
         if pygame.key.get_pressed()[pygame.K_a]:
             if player.location[0] is not 0:
